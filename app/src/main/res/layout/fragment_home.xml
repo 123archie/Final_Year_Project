@@ -24,7 +24,7 @@
         android:id="@+id/edit_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/spartan2"
+        android:fontFamily="@font/spartan"
         android:textSize="@dimen/textSize"/>
 </com.google.android.material.textfield.TextInputLayout>
 
@@ -45,7 +45,7 @@
         android:id="@+id/edit_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/spartan2"
+        android:fontFamily="@font/spartan"
         android:textSize="@dimen/textSize"/>
 </com.google.android.material.textfield.TextInputLayout>
     <androidx.cardview.widget.CardView
@@ -86,7 +86,7 @@
         android:id="@+id/edit_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/spartan2"
+        android:fontFamily="@font/spartan"
         android:textSize="@dimen/textSize"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -106,7 +106,7 @@
         android:id="@+id/edit_dest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/spartan2"
+        android:fontFamily="@font/spartan"
         android:textSize="@dimen/textSize"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -126,7 +126,7 @@
         android:id="@+id/edit_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/spartan2"
+        android:fontFamily="@font/spartan"
         android:textSize="@dimen/textSize"/>
     </com.google.android.material.textfield.TextInputLayout>
     <ImageView
@@ -156,6 +156,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/price"
         app:layout_constraintVertical_bias="0.825"
-        android:fontFamily="@font/spartan2"
+        android:fontFamily="@font/spartan"
         android:textSize="@dimen/textSize"></Button>
 </androidx.constraintlayout.widget.ConstraintLayout>
