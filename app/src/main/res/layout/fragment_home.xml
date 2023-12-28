@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/spartan"
         android:textSize="@dimen/textSize"/>
-</com.google.android.material.textfield.TextInputLayout>
 
+</com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passId"
         android:layout_width="match_parent"
@@ -66,8 +66,9 @@
         android:layout_height="match_parent"
         android:textAlignment="center"
         android:spinnerMode="dialog"
-        android:background="@drawable/spinner_bg"
-        />
+        android:background="@drawable/spinner_bg"/>
+<!--        android:theme="@style/SpinnerTheme"-->
+
     </androidx.cardview.widget.CardView>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/startAdd"
@@ -157,5 +158,5 @@
         app:layout_constraintTop_toBottomOf="@id/price"
         app:layout_constraintVertical_bias="0.825"
         android:fontFamily="@font/spartan"
-        android:textSize="@dimen/textSize"></Button>
+        android:textSize="@dimen/textSize" />
 </androidx.constraintlayout.widget.ConstraintLayout>
