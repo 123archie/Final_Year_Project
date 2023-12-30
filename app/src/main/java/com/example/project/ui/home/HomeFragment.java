@@ -1,4 +1,6 @@
 package com.example.project.ui.home;
+import com.geoapify.*;
+import com.geoapify.exceptions.GeoapifyException;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -57,10 +59,11 @@ public class HomeFragment extends Fragment {
         spin.setAdapter(spinnerAdapter);
 
         try {
-            URL url = new URL("https://api.geoapify.com/v1/geocode/autocomplete?text=India&apiKey=255bfc459b7f40c7932ffefeacc9d4d7");
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            http.setRequestProperty("Accept", "application/json");
-            http.disconnect();
+            GeoapifyClient client=new GeoapifyClient("255bfc459b7f40c7932ffefeacc9d4d7");
+            Place[] suggestions=client.autocomplete("India");
+            for(Place suggestion:suggestions){
+                System.out.println(suggestion.getName());
+            }
         } catch (IOException me) {
             Log.e("EErr msg:", "EErr msg: " + me.getMessage());
         }
