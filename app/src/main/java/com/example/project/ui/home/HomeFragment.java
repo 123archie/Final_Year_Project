@@ -1,6 +1,7 @@
 package com.example.project.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,10 @@ import android.widget.Toast;
 import com.example.project.R;
 import com.example.project.databinding.FragmentHomeBinding;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
@@ -34,40 +39,38 @@ public class HomeFragment extends Fragment {
         Spinner spin;
         ImageView fingerprint;
         Button btnsubmit;
-        ArrayList<String> spinnerList=new ArrayList<>();
+        ArrayList<String> spinnerList = new ArrayList<>();
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        name=binding.editName.findViewById(R.id.name);
-        passID=binding.editPass.findViewById(R.id.passId);
-        spin=binding.spinner.findViewById(R.id.spinner);
-        start=binding.editStart.findViewById(R.id.edit_start);
-        dest=binding.editDest.findViewById(R.id.edit_dest);
-        price=binding.editPrice.findViewById(R.id.edit_price);
-        btnsubmit=binding.btn.findViewById(R.id.btn);
+        name = binding.editName.findViewById(R.id.name);
+        passID = binding.editPass.findViewById(R.id.passId);
+        spin = binding.spinner.findViewById(R.id.spinner);
+        start = binding.editStart.findViewById(R.id.edit_start);
+        dest = binding.editDest.findViewById(R.id.edit_dest);
+        price = binding.editPrice.findViewById(R.id.edit_price);
+        btnsubmit = binding.btn.findViewById(R.id.btn);
         spinnerList.add("Male");
         spinnerList.add("Female");
         spinnerList.add("Others");
         spinnerList.add("Prefer not to say");
-        ArrayAdapter<String> spinnerAdapter=new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
 
-        View root = binding.getRoot();
+        try {
+            URL url = new URL("https://api.geoapify.com/v1/geocode/autocomplete?text=India&apiKey=255bfc459b7f40c7932ffefeacc9d4d7");
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestProperty("Accept", "application/json");
+            http.disconnect();
+        } catch (IOException me) {
+            Log.e("EErr msg:", "EErr msg: " + me.getMessage());
+        }
+            View root = binding.getRoot();
 
 
-
-        return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-//    public boolean regexName(String name){
-//        int i=0;
-//        while(i<name.length()){
-//            char ch=name.charAt(i);
-//            if()
-//        }
-//    }
-}
+            return root;
+        }
+        @Override
+        public void onDestroyView() {
+            super.onDestroyView();
+            binding = null;
+        }}

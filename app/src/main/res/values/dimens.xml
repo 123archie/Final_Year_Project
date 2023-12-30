@@ -6,5 +6,5 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="btn_size">69dp</dimen>
-    <dimen name="textSize">20dp</dimen>
+    <dimen name="textSize">15dp</dimen>
 </resources>
