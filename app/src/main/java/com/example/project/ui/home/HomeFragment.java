@@ -17,10 +17,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
 import com.example.project.databinding.FragmentHomeBinding;
-import com.geoapify.*;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import com.geoapify.Geoapify;
+import com.geoapify.GeoapifyAutocompleteRequest;
+import com.geoapify.GeoapifyAutocompleteResponse;
 
 public class HomeFragment extends Fragment {
 
@@ -52,13 +56,21 @@ public class HomeFragment extends Fragment {
         spin.setAdapter(spinnerAdapter);
 
         try {
-            GeoapifyClient client=new GeoapifyClient("255bfc459b7f40c7932ffefeacc9d4d7");
-            Place[] suggestions=client.autocomplete("India");
-            for(Place suggestion:suggestions){
-                System.out.println(suggestion.getName());
-            }
-        } catch (IOException me) {
-            Log.e("EErr msg:", "EErr msg: " + me.getMessage());
+//            GeoapifyClient client=new GeoapifyClient("255bfc459b7f40c7932ffefeacc9d4d7");
+//            Place[] suggestions=client.autocomplete("India");
+//            for(Place suggestion:suggestions){
+//                System.out.println(suggestion.getName());
+//            }
+            URL url = new URL("http://api.geoapify.com/v1/geocode/autocomplete?text=Regen&type=city&format=json&apiKey=255bfc459b7f40c7932ffefeacc9d4d7");
+            Log.d("Error1: ", "URL: "+url);
+            HttpURLConnection http = (HttpURLConnection)url.openConnection();
+            Log.d("Error1: ", "Http: "+http);
+            http.setRequestProperty("Accept", "application/json");
+            Log.d("Error1: ", "responseCode: "+url);
+            System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
+            http.disconnect();
+        } catch (IOException io) {
+            Log.e("EErr msg:", "EErr msg: " + io.getMessage());
         }
             View root = binding.getRoot();
 
