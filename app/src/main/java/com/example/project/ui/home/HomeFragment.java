@@ -1,5 +1,6 @@
 package com.example.project.ui.home;
 
+import android.icu.util.IndianCalendar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,9 +23,11 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import com.geoapify.Geoapify;
-import com.geoapify.GeoapifyAutocompleteRequest;
-import com.geoapify.GeoapifyAutocompleteResponse;
+
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
 
@@ -34,6 +37,7 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
+        Response response=null;
         EditText name, passID, start, dest, price;
         Spinner spin;
         ImageView fingerprint;
@@ -54,22 +58,23 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
-
         try {
-//            GeoapifyClient client=new GeoapifyClient("255bfc459b7f40c7932ffefeacc9d4d7");
-//            Place[] suggestions=client.autocomplete("India");
-//            for(Place suggestion:suggestions){
-//                System.out.println(suggestion.getName());
-//            }
-            URL url = new URL("http://api.geoapify.com/v1/geocode/autocomplete?text=Regen&type=city&format=json&apiKey=255bfc459b7f40c7932ffefeacc9d4d7");
-            Log.d("Error1: ", "URL: "+url);
+//            OkHttpClient client = new OkHttpClient().newBuilder()
+//                    .build();Log.d("Message2", "Message2"+client);
+//            Request request = new Request.Builder()
+//                    .url("https://api.geoapify.com/v1/geocode/autocomplete?text=India&apiKey=255bfc459b7f40c7932ffefeacc9d4d7")
+//                    .method("GET",null)
+//                    .build();Log.d("Message2", "Request2"+request);
+//            response=client.newCall(request).execute();
+
+            URL url = new URL("http://api.geoapify.com/v1/geocode/autocomplete?text=India&apiKey=255bfc459b7f40c7932ffefeacc9d4d7");
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
-            Log.d("Error1: ", "Http: "+http);
             http.setRequestProperty("Accept", "application/json");
-            Log.d("Error1: ", "responseCode: "+url);
-            System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
+            Log.d("Message2", "Message2: "+http.getResponseCode());
+            System.out.println(http.getResponseCode()+" "+http.getResponseMessage());
             http.disconnect();
-        } catch (IOException io) {
+            }
+        catch (IOException io) {
             Log.e("EErr msg:", "EErr msg: " + io.getMessage());
         }
             View root = binding.getRoot();
