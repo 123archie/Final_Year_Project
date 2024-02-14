@@ -1,5 +1,10 @@
 package com.example.project.ui.home;
 
+import static android.app.appsearch.AppSearchResult.RESULT_OK;
+
+import static com.google.android.libraries.places.widget.AutocompleteActivity.RESULT_ERROR;
+
+import android.content.Intent;
 import android.icu.util.IndianCalendar;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,16 +18,28 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
 import com.example.project.databinding.FragmentHomeBinding;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 
 import okhttp3.OkHttpClient;
@@ -32,13 +49,13 @@ import okhttp3.Response;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-
+    public EditText start, dest;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         Response response=null;
-        EditText name, passID, start, dest, price;
+        EditText name, passID, price;
         Spinner spin;
         ImageView fingerprint;
         Button btnsubmit;
@@ -58,32 +75,58 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
-        try {
-//            OkHttpClient client = new OkHttpClient().newBuilder()
-//                    .build();Log.d("Message2", "Message2"+client);
-//            Request request = new Request.Builder()
-//                    .url("https://api.geoapify.com/v1/geocode/autocomplete?text=India&apiKey=255bfc459b7f40c7932ffefeacc9d4d7")
-//                    .method("GET",null)
-//                    .build();Log.d("Message2", "Request2"+request);
-//            response=client.newCall(request).execute();
+        Places.initialize(getContext().getApplicationContext(), "AIzaSyDHU2QBEwEkibjIJo0hSmZp6t7KXzD6wqU");
+        start.setFocusable(false);
+        dest.setFocusable(false);
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
+                       );
+                Log.d("FieldList: ", "FieldList: "+fieldlist);
+                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
+                startActivityForResult(intent,100);
+                Log.d("startactive", "StartActivity:");
 
-            URL url = new URL("http://api.geoapify.com/v1/geocode/autocomplete?text=India&apiKey=255bfc459b7f40c7932ffefeacc9d4d7");
-            HttpURLConnection http = (HttpURLConnection)url.openConnection();
-            http.setRequestProperty("Accept", "application/json");
-            Log.d("Message2", "Message2: "+http.getResponseCode());
-            System.out.println(http.getResponseCode()+" "+http.getResponseMessage());
-            http.disconnect();
             }
-        catch (IOException io) {
-            Log.e("EErr msg:", "EErr msg: " + io.getMessage());
-        }
-            View root = binding.getRoot();
+        });
+        dest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
+                );
+                Log.d("FieldList: ", "FieldList: "+fieldlist);
+                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
+                startActivityForResult(intent,100);
+                Log.d("startactive", "StartActivity:");
 
+            }
+        });
+        View root = binding.getRoot();
+        return root;
 
-            return root;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            Log.d("Places_Data", "Places_Data: "+requestCode+", "+resultCode);
+            Log.d("Places_Data", "Places_Data: "+data);
+        if(requestCode==100 && resultCode==RESULT_OK){
+            Place place=Autocomplete.getPlaceFromIntent(data);
+            start.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
+            dest.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
+        }else if(resultCode== AutocompleteActivity.RESULT_ERROR){
+            Status status=Autocomplete.getStatusFromIntent(data);
+
         }
-        @Override
+    }
+
+    @Override
         public void onDestroyView() {
             super.onDestroyView();
             binding = null;
-        }}
+        }
+
+
+}
