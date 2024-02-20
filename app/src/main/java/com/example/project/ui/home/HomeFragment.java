@@ -5,6 +5,8 @@ import static android.app.appsearch.AppSearchResult.RESULT_OK;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -127,7 +129,7 @@ public class HomeFragment extends Fragment {
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                if(editName.getText().toString()==""){
+                if(editName.getText().length()==0){
                     name.setCompoundDrawables(null, null, img, null);
                 }
                 else if(editPass.getText().length()==0){
