@@ -77,47 +77,47 @@ public class HomeFragment extends Fragment {
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
         Places.initialize(getContext().getApplicationContext(), "AIzaSyDHU2QBEwEkibjIJo0hSmZp6t7KXzD6wqU");
-        start.setFocusable(false);
-        dest.setFocusable(false);
-        start.setOnClickListener(new View.OnClickListener() {
+//        start.setFocusable(false);
+//        dest.setFocusable(false);
+//        start.setOnClickListener(new View.OnClickListener() {
+////            @Override
+//            public void onClick(View v) {
+////                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
+////                       );
+////                Log.d("FieldList: ", "FieldList: "+fieldlist);
+////                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
+////                startActivityForResult(intent,100);
+////                Log.d("startactive", "StartActivity:");
+////
+////            }
+//
+//                OkHttpClient client = new OkHttpClient();
+//
+//                Request request = new Request.Builder()
+//                        .url("https://geoapify-address-autocomplete.p.rapidapi.com/v1/geocode/autocomplete?text=Polizeigasse&type=street&lang=de&limit=2&filter=countrycode%3Ade%2Ces%2Cfr&bias=proximity%3A10.485306%2C48.852565")
+//                        .get()
+//                        .addHeader("X-RapidAPI-Key", "84743f608emsh304f1d6aff5f6afp1d8849jsnfdcf72505aa4")
+//                        .addHeader("X-RapidAPI-Host", "geoapify-address-autocomplete.p.rapidapi.com")
+//                        .build();
+//
+//                try {
+//                    com.squareup.okhttp.Response response = client.newCall(request).execute();
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }});
+//        dest.setOnClickListener(new View.OnClickListener() {
 //            @Override
-            public void onClick(View v) {
+//            public void onClick(View v) {
 //                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
-//                       );
+//                );
 //                Log.d("FieldList: ", "FieldList: "+fieldlist);
 //                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
 //                startActivityForResult(intent,100);
 //                Log.d("startactive", "StartActivity:");
 //
 //            }
-
-                OkHttpClient client = new OkHttpClient();
-
-                Request request = new Request.Builder()
-                        .url("https://geoapify-address-autocomplete.p.rapidapi.com/v1/geocode/autocomplete?text=Polizeigasse&type=street&lang=de&limit=2&filter=countrycode%3Ade%2Ces%2Cfr&bias=proximity%3A10.485306%2C48.852565")
-                        .get()
-                        .addHeader("X-RapidAPI-Key", "84743f608emsh304f1d6aff5f6afp1d8849jsnfdcf72505aa4")
-                        .addHeader("X-RapidAPI-Host", "geoapify-address-autocomplete.p.rapidapi.com")
-                        .build();
-
-                try {
-                    com.squareup.okhttp.Response response = client.newCall(request).execute();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }});
-        dest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
-                );
-                Log.d("FieldList: ", "FieldList: "+fieldlist);
-                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
-                startActivityForResult(intent,100);
-                Log.d("startactive", "StartActivity:");
-
-            }
-        });
+//        });
         double start_latitude=0.0;
         double start_longitude=0.0;
         double end_latitude=0.0;
