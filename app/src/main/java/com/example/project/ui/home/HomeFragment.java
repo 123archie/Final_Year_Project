@@ -1,13 +1,9 @@
 package com.example.project.ui.home;
 
-import static android.app.appsearch.AppSearchResult.RESULT_OK;
-
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.renderscript.Allocation;
-import android.text.Layout;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,27 +16,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.toolbox.HttpResponse;
 import com.example.project.R;
 import com.example.project.databinding.FragmentHomeBinding;
-import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 
-import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 
 import okhttp3.Response;
 
@@ -48,6 +32,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     public EditText start, dest;
+    String startAddress, destAddress;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -76,48 +61,42 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
-        Places.initialize(getContext().getApplicationContext(), "AIzaSyDHU2QBEwEkibjIJo0hSmZp6t7KXzD6wqU");
-//        start.setFocusable(false);
-//        dest.setFocusable(false);
-//        start.setOnClickListener(new View.OnClickListener() {
-////            @Override
-//            public void onClick(View v) {
-////                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
-////                       );
-////                Log.d("FieldList: ", "FieldList: "+fieldlist);
-////                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
-////                startActivityForResult(intent,100);
-////                Log.d("startactive", "StartActivity:");
-////
-////            }
-//
-//                OkHttpClient client = new OkHttpClient();
-//
-//                Request request = new Request.Builder()
-//                        .url("https://geoapify-address-autocomplete.p.rapidapi.com/v1/geocode/autocomplete?text=Polizeigasse&type=street&lang=de&limit=2&filter=countrycode%3Ade%2Ces%2Cfr&bias=proximity%3A10.485306%2C48.852565")
-//                        .get()
-//                        .addHeader("X-RapidAPI-Key", "84743f608emsh304f1d6aff5f6afp1d8849jsnfdcf72505aa4")
-//                        .addHeader("X-RapidAPI-Host", "geoapify-address-autocomplete.p.rapidapi.com")
-//                        .build();
-//
-//                try {
-//                    com.squareup.okhttp.Response response = client.newCall(request).execute();
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }});
-//        dest.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
-//                );
-//                Log.d("FieldList: ", "FieldList: "+fieldlist);
-//                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
-//                startActivityForResult(intent,100);
-//                Log.d("startactive", "StartActivity:");
-//
-//            }
-//        });
+        start.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                startAddress=start.getText().toString();
+                Log.d("StartText", "StartText: "+startAddress);
+                responseAddress(startAddress);
+            }
+        });
+        dest.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                destAddress=dest.getText().toString();
+                Log.d("DestText", "DestText: "+destAddress);
+                responseAddress(destAddress);
+            }
+        });
         double start_latitude=0.0;
         double start_longitude=0.0;
         double end_latitude=0.0;
@@ -152,19 +131,32 @@ public class HomeFragment extends Fragment {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-            Log.d("Places_Data", "Places_Data: "+requestCode+", "+resultCode);
-            Log.d("Places_Data", "Places_Data: "+data);
-        if(requestCode==100 && resultCode==RESULT_OK){
-            Place place=Autocomplete.getPlaceFromIntent(data);
-            start.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
-            dest.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
-        }else if(resultCode== AutocompleteActivity.RESULT_ERROR){
-            Status status=Autocomplete.getStatusFromIntent(data);
-
-        }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//            Log.d("Places_Data", "Places_Data: "+requestCode+", "+resultCode);
+//            Log.d("Places_Data", "Places_Data: "+data);
+//        if(requestCode==100 && resultCode==RESULT_OK){
+//            Place place=Autocomplete.getPlaceFromIntent(data);
+//            start.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
+//            dest.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
+//        }else if(resultCode== AutocompleteActivity.RESULT_ERROR){
+//            Status status=Autocomplete.getStatusFromIntent(data);
+//
+//        }
+//    }
+    public String responseAddress(String address){
+        try{
+        URL url = new URL("https://api.geoapify.com/v1/geocode/autocomplete?text=Delhi&apiKey=d761a6dcc0c34188a4ff9bb0a176ff74");
+        HttpURLConnection http = (HttpURLConnection)url.openConnection();
+        http.setRequestProperty("Accept", "application/json");
+//        int code= http.getResponseCode();
+        Log.d("StringException", "StringException: "+ address);;
+//        Log.d("httpResponse", "HttpResponse");
+        http.disconnect();}
+        catch(Exception e){
+            Log.d("IOException", "IOException: "+e.getMessage());
+        }return "";
     }
     public int calculateDistance(){
 
