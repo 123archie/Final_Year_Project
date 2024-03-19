@@ -1,5 +1,6 @@
 package com.example.project.ui.home;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,11 +23,26 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project.R;
 import com.example.project.databinding.FragmentHomeBinding;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.MalformedURLException;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
@@ -39,7 +56,7 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         Response response=null;
         EditText name, passID, price, editName, editPass;
-        Spinner spin;
+        Spinner spin, spin2;
         ImageView fingerprint;
         Button btnsubmit;
         ArrayList<String> spinnerList = new ArrayList<>();
@@ -54,6 +71,7 @@ public class HomeFragment extends Fragment {
         dest = binding.editDest.findViewById(R.id.edit_dest);
         price = binding.editPrice.findViewById(R.id.edit_price);
         btnsubmit = binding.btn.findViewById(R.id.btn);
+        spin2=binding.spinner2.findViewById(R.id.spinner2);
         spinnerList.add("Male");
         spinnerList.add("Female");
         spinnerList.add("Others");
@@ -61,6 +79,14 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
+        spinnerList = new ArrayList<>();
+        spin2.setPrompt("Select Bus Type");
+        spinnerList.add("Standard");
+        spinnerList.add("AC");
+        spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spin2.setAdapter(spinnerAdapter);
+        spin2.setSelection(0);
         start.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,6 +103,7 @@ public class HomeFragment extends Fragment {
                 startAddress=start.getText().toString();
                 Log.d("StartText", "StartText: "+startAddress);
                 responseAddress(startAddress);
+
             }
         });
         dest.addTextChangedListener(new TextWatcher() {
@@ -101,8 +128,22 @@ public class HomeFragment extends Fragment {
         double start_longitude=0.0;
         double end_latitude=0.0;
         double end_longitude=0.0;
-        int dist=calculateDistance();
-        price.setText("Rs. "+(dist*2));
+        int dist=calculateDistance(startAddress, destAddress);
+        spin2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(spin2.getSelectedItem().toString().equals("AC")) {
+                    price.setText("Rs. " + (dist * 50));
+                }else {
+                    price.setText("Rs. " + (dist * 40));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         price.setCursorVisible(false);
         price.setFocusable(false);
         btnsubmit.setOnClickListener(new View.OnClickListener() {
@@ -145,22 +186,40 @@ public class HomeFragment extends Fragment {
 //
 //        }
 //    }
-    public String responseAddress(String address){
-        try{
-        URL url = new URL("https://api.geoapify.com/v1/geocode/autocomplete?text=Delhi&apiKey=d761a6dcc0c34188a4ff9bb0a176ff74");
-        HttpURLConnection http = (HttpURLConnection)url.openConnection();
-        http.setRequestProperty("Accept", "application/json");
-//        int code= http.getResponseCode();
-        Log.d("StringException", "StringException: "+ address);;
-//        Log.d("httpResponse", "HttpResponse");
-        http.disconnect();}
-        catch(Exception e){
-            Log.d("IOException", "IOException: "+e.getMessage());
-        }return "";
-    }
-    public int calculateDistance(){
+    public void responseAddress(String address){
+        if(!Places.isInitialized()) {
+            Places.initialize(getContext().getApplicationContext(), "AIzaSyDHU2QBEwEkibjIJo0hSmZp6t7KXzD6wqU");
+        }
+        start.setFocusable(false);
+        dest.setFocusable(false);
+        start.setOnClickListener(new View.OnClickListener() {
+           @Override
+            public void onClick(View v) {
+                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
+                       );
+                Log.d("FieldList: ", "FieldList: "+fieldlist);
+                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
+                startActivityForResult(intent,100);
+                Log.d("startactive", "StartActivity:");
 
-        return 0;
+            }
+    });
+        dest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+            public void onClick(View v) {
+                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
+                );
+                Log.d("FieldList: ", "FieldList: "+fieldlist);
+                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
+                startActivityForResult(intent,100);
+                Log.d("startactive", "StartActivity:");
+
+            }
+        });}
+    public int calculateDistance(String startAddress, String destAddress){
+//        int dist=Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1)*6371);
+//        return dist;
+        return 1;
     }
     @Override
         public void onDestroyView() {
