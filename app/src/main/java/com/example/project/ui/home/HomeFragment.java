@@ -1,6 +1,5 @@
 package com.example.project.ui.home;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -49,17 +48,17 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     public EditText start, dest;
-    String startAddress, destAddress;
+    String startAddress, destAddress, plc;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         Response response=null;
         EditText name, passID, price, editName, editPass;
-        Spinner spin, spin2;
+        Spinner spin, spin2, dest;
         ImageView fingerprint;
         Button btnsubmit;
-        ArrayList<String> spinnerList = new ArrayList<>();
+
         Drawable img=getContext().getDrawable(R.mipmap.warning);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         name = binding.editName.findViewById(R.id.name);
@@ -68,10 +67,11 @@ public class HomeFragment extends Fragment {
         editPass=binding.editPass.findViewById(R.id.edit_pass);
         spin = binding.spinner.findViewById(R.id.spinner);
         start = binding.editStart.findViewById(R.id.edit_start);
-        dest = binding.editDest.findViewById(R.id.edit_dest);
+        dest = binding.destAdd.findViewById(R.id.destAdd);
         price = binding.editPrice.findViewById(R.id.edit_price);
         btnsubmit = binding.btn.findViewById(R.id.btn);
         spin2=binding.spinner2.findViewById(R.id.spinner2);
+        ArrayList<String> spinnerList = new ArrayList<>();
         spinnerList.add("Male");
         spinnerList.add("Female");
         spinnerList.add("Others");
@@ -79,6 +79,26 @@ public class HomeFragment extends Fragment {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
+        start.setFocusable(false);
+        //Select Destination
+        spinnerList = new ArrayList<>();
+        spinnerList.add("Haryana");
+        spinnerList.add("Jammu and Kashmir");
+        spinnerList.add("Ladakh");
+        spinnerList.add("Punjab");
+        spinnerList.add("Himachal Pradesh");
+        spinnerList.add("Uttar Pradesh");
+        spinnerList.add("Rajasthan");
+        spinnerList.add("Utarakhand");
+        spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        dest.setPrompt("Select Destination");
+        dest.setAdapter(spinnerAdapter);
+        dest.setSelection(0);
+       //Select Bus Type
+        spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spin2.setAdapter(spinnerAdapter);
         spinnerList = new ArrayList<>();
         spin2.setPrompt("Select Bus Type");
         spinnerList.add("Standard");
@@ -87,55 +107,45 @@ public class HomeFragment extends Fragment {
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin2.setAdapter(spinnerAdapter);
         spin2.setSelection(0);
-        start.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                startAddress=start.getText().toString();
-                Log.d("StartText", "StartText: "+startAddress);
-                responseAddress(startAddress);
-
-            }
-        });
-        dest.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                destAddress=dest.getText().toString();
-                Log.d("DestText", "DestText: "+destAddress);
-                responseAddress(destAddress);
-            }
-        });
-        double start_latitude=0.0;
-        double start_longitude=0.0;
-        double end_latitude=0.0;
-        double end_longitude=0.0;
-        int dist=calculateDistance(startAddress, destAddress);
         spin2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spin2.getSelectedItem().toString().equals("AC")) {
-                    price.setText("Rs. " + (dist * 50));
+                    if(dest.getSelectedItem().toString().equals("Haryana")){
+                        price.setText("Rs. "+65);
+                    }else if(dest.getSelectedItem().toString().equals("Jammu and Kashmir")){
+                        price.setText("Rs. "+1200);
+                    }else if(dest.getSelectedItem().toString().equals("Ladakh")){
+                        price.setText("Rs. "+1760);
+                    }else if(dest.getSelectedItem().toString().equals("Punjab")){
+                        price.setText("Rs. "+945);
+                    }else if(dest.getSelectedItem().toString().equals("Himachal Pradesh")){
+                        price.setText("Rs. "+705);
+                    }else if(dest.getSelectedItem().toString().equals("Uttar Pradesh")){
+                        price.setText("Rs. "+699);
+                    }else if(dest.getSelectedItem().toString().equals("Rajasthan")){
+                        price.setText("Rs. "+900);
+                    }else if(dest.getSelectedItem().toString().equals("Uttarakhand")){
+                        price.setText("Rs. "+1310);
+                    }
                 }else {
-                    price.setText("Rs. " + (dist * 40));
+                    if(dest.getSelectedItem().toString().equals("Haryana")){
+                        price.setText("Rs. "+50);
+                    }else if(dest.getSelectedItem().toString().equals("Jammu and Kashmir")){
+                        price.setText("Rs. "+660);
+                    }else if(dest.getSelectedItem().toString().equals("Ladakh")){
+                        price.setText("Rs. "+1365);
+                    }else if(dest.getSelectedItem().toString().equals("Punjab")){
+                        price.setText("Rs. "+676);
+                    }else if(dest.getSelectedItem().toString().equals("Himachal Pradesh")){
+                        price.setText("Rs. "+526);
+                    }else if(dest.getSelectedItem().toString().equals("Uttar Pradesh")){
+                        price.setText("Rs. "+18);
+                    }else if(dest.getSelectedItem().toString().equals("Rajasthan")){
+                        price.setText("Rs. "+290);
+                    }else if(dest.getSelectedItem().toString().equals("Uttarakhand")){
+                        price.setText("Rs. "+300);
+                    }
                 }
             }
 
@@ -157,8 +167,6 @@ public class HomeFragment extends Fragment {
                 }
                 else if(start.getText().length()==0){
 
-                }else if(dest.getText().length()==0){
-
                 }else if(price.getText().length()==0){
 
                 }
@@ -170,56 +178,6 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         return root;
 
-    }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//            Log.d("Places_Data", "Places_Data: "+requestCode+", "+resultCode);
-//            Log.d("Places_Data", "Places_Data: "+data);
-//        if(requestCode==100 && resultCode==RESULT_OK){
-//            Place place=Autocomplete.getPlaceFromIntent(data);
-//            start.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
-//            dest.setText(place.getAddress() + String.format(place.getName()+String.valueOf(place.getLatLng())));
-//        }else if(resultCode== AutocompleteActivity.RESULT_ERROR){
-//            Status status=Autocomplete.getStatusFromIntent(data);
-//
-//        }
-//    }
-    public void responseAddress(String address){
-        if(!Places.isInitialized()) {
-            Places.initialize(getContext().getApplicationContext(), "AIzaSyDHU2QBEwEkibjIJo0hSmZp6t7KXzD6wqU");
-        }
-        start.setFocusable(false);
-        dest.setFocusable(false);
-        start.setOnClickListener(new View.OnClickListener() {
-           @Override
-            public void onClick(View v) {
-                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
-                       );
-                Log.d("FieldList: ", "FieldList: "+fieldlist);
-                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
-                startActivityForResult(intent,100);
-                Log.d("startactive", "StartActivity:");
-
-            }
-    });
-        dest.setOnClickListener(new View.OnClickListener() {
-                        @Override
-            public void onClick(View v) {
-                List<Place.Field> fieldlist= Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME
-                );
-                Log.d("FieldList: ", "FieldList: "+fieldlist);
-                Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldlist).build(requireContext());
-                startActivityForResult(intent,100);
-                Log.d("startactive", "StartActivity:");
-
-            }
-        });}
-    public int calculateDistance(String startAddress, String destAddress){
-//        int dist=Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1)*6371);
-//        return dist;
-        return 1;
     }
     @Override
         public void onDestroyView() {
