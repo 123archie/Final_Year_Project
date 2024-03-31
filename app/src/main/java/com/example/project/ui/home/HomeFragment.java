@@ -2,6 +2,10 @@ package com.example.project.ui.home;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +50,56 @@ public class HomeFragment extends Fragment {
         price = binding.editPrice.findViewById(R.id.edit_price);
         btnsubmit = binding.btn.findViewById(R.id.btn);
         spin2=binding.spinner2.findViewById(R.id.spinner2);
+        editName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence editName, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence editName, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editName) {
+                if(Character.isDigit(editName.toString().charAt(editName.length()-1))){
+                    Toast.makeText(getContext(), "Name Should not contain digit.", Toast.LENGTH_SHORT).show();
+                    editName.setFilters(new InputFilter[] {
+                            new InputFilter.LengthFilter(editName.length())
+                    });
+                }else{
+                    editName.setFilters(new InputFilter[] {});
+                }
+            }
+        });
+        editPass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence passID, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence passID, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable passID) {
+                if(!checkPassportID(passID.toString())){
+                    Toast.makeText(getContext(), "Passport ID is invalid.", Toast.LENGTH_SHORT).show();
+                    passID.setFilters(new InputFilter[] {
+                            new InputFilter.LengthFilter(passID.length())
+                    });
+                }else if(checkPassportID(passID.toString())){
+                    passID.setFilters(new InputFilter[]{});
+                }
+                passID.setFilters(new InputFilter[]{
+                        new InputFilter.LengthFilter(8)
+                });
+            }
+        });
+
         ArrayList<String> spinnerList = new ArrayList<>();
         spinnerList.add("Male");
         spinnerList.add("Female");
@@ -137,13 +191,8 @@ public class HomeFragment extends Fragment {
                 if(editName.getText().length()==0){
                     name.setCompoundDrawables(null, null, img, null);
                 }
-                else if(editPass.getText().length()==0){
-
-                }
-                else if(start.getText().length()==0){
-
-                }else if(price.getText().length()==0){
-
+                else if(editPass.getText().length()>=0 && editPass.getText().length()<8){
+                    editPass.setCompoundDrawables(null, null, img, null);
                 }
              else{
                 Toast.makeText(getContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
@@ -160,5 +209,25 @@ public class HomeFragment extends Fragment {
             binding = null;
         }
 
-
+public boolean checkPassportID(String pass) {
+    char ch = pass.charAt(pass.length() - 1);
+    Log.d("Passport length", "Passport length: "+pass.length());
+    if (pass.length() == 1 && !(ch >= 65 && ch <= 90) || (ch=='Q' || ch=='X')) {
+        return false;
+    }
+    if (pass.length() == 2 && !(ch >= 49 && ch <= 57)) {
+        return false;
+    }
+    if (pass.length() == 3 && !(ch >= 48 && ch <= 57)) {
+        return false;
+    }
+    if ((pass.length() == 4 || pass.length() == 5 || pass.length() == 6 || pass.length() == 7) && !(ch >= 48 && ch <= 57)) {
+        return false;
+    }
+    if (pass.length() == 8 && !(ch >= 49 && ch <= 57)) {
+        return false;
+    }
+    return true;
 }
+}
+
