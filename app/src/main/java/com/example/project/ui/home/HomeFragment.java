@@ -32,10 +32,8 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
-        Response response=null;
         EditText name, passID, price, editName, editPass;
         Spinner spin, spin2, dest;
-        ImageView fingerprint;
         Button btnsubmit;
 
         Drawable img=getContext().getDrawable(R.mipmap.warning);
@@ -68,7 +66,8 @@ public class HomeFragment extends Fragment {
                     editName.setFilters(new InputFilter[] {
                             new InputFilter.LengthFilter(editName.length())
                     });
-                }else{
+                }
+                else{
                     editName.setFilters(new InputFilter[] {});
                 }
             }
@@ -85,16 +84,16 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable passID) {
-                if(!checkPassportID(passID.toString())){
+            public void afterTextChanged(Editable editPass) {
+                if(!checkPassportID(editPass.toString())){
                     Toast.makeText(getContext(), "Passport ID is invalid.", Toast.LENGTH_SHORT).show();
-                    passID.setFilters(new InputFilter[] {
-                            new InputFilter.LengthFilter(passID.length())
+                    editPass.setFilters(new InputFilter[] {
+                            new InputFilter.LengthFilter(editPass.length())
                     });
-                }else if(checkPassportID(passID.toString())){
-                    passID.setFilters(new InputFilter[]{});
-                }
-                passID.setFilters(new InputFilter[]{
+                }else if(checkPassportID(editPass.toString())){
+                    editPass.setFilters(new InputFilter[]{});
+                }else if(checkPassportID(editPass.toString()) && editPass.length()==8)
+                editPass.setFilters(new InputFilter[]{
                         new InputFilter.LengthFilter(8)
                 });
             }
@@ -105,12 +104,13 @@ public class HomeFragment extends Fragment {
         spinnerList.add("Female");
         spinnerList.add("Others");
         spinnerList.add("Prefer not to say");
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin.setAdapter(spinnerAdapter);
         start.setFocusable(false);
         //Select Destination
         spinnerList = new ArrayList<>();
+        dest.setPrompt("Select Destination");
         spinnerList.add("Haryana");
         spinnerList.add("Jammu and Kashmir");
         spinnerList.add("Ladakh");
@@ -119,20 +119,18 @@ public class HomeFragment extends Fragment {
         spinnerList.add("Uttar Pradesh");
         spinnerList.add("Rajasthan");
         spinnerList.add("Utarakhand");
-        spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile2, spinnerList);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dest.setPrompt("Select Destination");
         dest.setAdapter(spinnerAdapter);
         dest.setSelection(0);
        //Select Bus Type
-        spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin2.setAdapter(spinnerAdapter);
         spinnerList = new ArrayList<>();
         spin2.setPrompt("Select Bus Type");
         spinnerList.add("Standard");
         spinnerList.add("AC");
-        spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerList);
+        spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spin2.setAdapter(spinnerAdapter);
         spin2.setSelection(0);
@@ -189,10 +187,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v){
                 if(editName.getText().length()==0){
-                    name.setCompoundDrawables(null, null, img, null);
+//                    name.setCompoundDrawables(null, null, img, null);
                 }
                 else if(editPass.getText().length()>=0 && editPass.getText().length()<8){
-                    editPass.setCompoundDrawables(null, null, img, null);
+//                    editPass.setCompoundDrawables(null, null, img, null);
                 }
              else{
                 Toast.makeText(getContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
