@@ -13,10 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.MenuPopupWindow;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.project.R;
@@ -32,16 +33,13 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
-        EditText name, passID, price, editName, editPass;
+        EditText name, price, editName;
         Spinner spin, spin2, dest;
         Button btnsubmit;
-
         Drawable img=getContext().getDrawable(R.mipmap.warning);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         name = binding.editName.findViewById(R.id.name);
         editName=binding.editName.findViewById(R.id.edit_name);
-        passID = binding.editPass.findViewById(R.id.passId);
-        editPass=binding.editPass.findViewById(R.id.edit_pass);
         spin = binding.spinner.findViewById(R.id.spinner);
         start = binding.editStart.findViewById(R.id.edit_start);
         dest = binding.destAdd.findViewById(R.id.destAdd);
@@ -61,6 +59,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editName) {
+                try{
                 if(Character.isDigit(editName.toString().charAt(editName.length()-1))){
                     Toast.makeText(getContext(), "Name Should not contain digit.", Toast.LENGTH_SHORT).show();
                     editName.setFilters(new InputFilter[] {
@@ -69,48 +68,26 @@ public class HomeFragment extends Fragment {
                 }
                 else{
                     editName.setFilters(new InputFilter[] {});
+                }}catch(Exception e){
+
                 }
-            }
-        });
-        editPass.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence passID, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence passID, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editPass) {
-                if(!checkPassportID(editPass.toString())){
-                    Toast.makeText(getContext(), "Passport ID is invalid.", Toast.LENGTH_SHORT).show();
-                    editPass.setFilters(new InputFilter[] {
-                            new InputFilter.LengthFilter(editPass.length())
-                    });
-                }else if(checkPassportID(editPass.toString())){
-                    editPass.setFilters(new InputFilter[]{});
-                }else if(checkPassportID(editPass.toString()) && editPass.length()==8)
-                editPass.setFilters(new InputFilter[]{
-                        new InputFilter.LengthFilter(8)
-                });
             }
         });
 
         ArrayList<String> spinnerList = new ArrayList<>();
+        spinnerList.add("Select Gender");
         spinnerList.add("Male");
         spinnerList.add("Female");
         spinnerList.add("Others");
         spinnerList.add("Prefer not to say");
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spin.setSelection(0);
         spin.setAdapter(spinnerAdapter);
         start.setFocusable(false);
         //Select Destination
         spinnerList = new ArrayList<>();
-        dest.setPrompt("Select Destination");
+        spinnerList.add("Select Destination");
         spinnerList.add("Haryana");
         spinnerList.add("Jammu and Kashmir");
         spinnerList.add("Ladakh");
@@ -121,13 +98,12 @@ public class HomeFragment extends Fragment {
         spinnerList.add("Utarakhand");
         spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile2, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dest.setPrompt("Select Destination");
         dest.setAdapter(spinnerAdapter);
         dest.setSelection(0);
        //Select Bus Type
         spin2.setAdapter(spinnerAdapter);
         spinnerList = new ArrayList<>();
-        spin2.setPrompt("Select Bus Type");
+        spinnerList.add("Select Bus Type");
         spinnerList.add("Standard");
         spinnerList.add("AC");
         spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile, spinnerList);
@@ -189,9 +165,6 @@ public class HomeFragment extends Fragment {
                 if(editName.getText().length()==0){
 //                    name.setCompoundDrawables(null, null, img, null);
                 }
-                else if(editPass.getText().length()>=0 && editPass.getText().length()<8){
-//                    editPass.setCompoundDrawables(null, null, img, null);
-                }
              else{
                 Toast.makeText(getContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
              }
@@ -207,25 +180,6 @@ public class HomeFragment extends Fragment {
             binding = null;
         }
 
-public boolean checkPassportID(String pass) {
-    char ch = pass.charAt(pass.length() - 1);
-    Log.d("Passport length", "Passport length: "+pass.length());
-    if (pass.length() == 1 && !(ch >= 65 && ch <= 90) || (ch=='Q' || ch=='X')) {
-        return false;
-    }
-    if (pass.length() == 2 && !(ch >= 49 && ch <= 57)) {
-        return false;
-    }
-    if (pass.length() == 3 && !(ch >= 48 && ch <= 57)) {
-        return false;
-    }
-    if ((pass.length() == 4 || pass.length() == 5 || pass.length() == 6 || pass.length() == 7) && !(ch >= 48 && ch <= 57)) {
-        return false;
-    }
-    if (pass.length() == 8 && !(ch >= 49 && ch <= 57)) {
-        return false;
-    }
-    return true;
-}
+
 }
 
