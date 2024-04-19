@@ -155,6 +155,43 @@ public class HomeFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+                if(spin2.getItemAtPosition(0).equals("AC")) {
+                    if(dest.getSelectedItem().toString().equals("Haryana")){
+                        price.setText("Rs. "+65);
+                    }else if(dest.getSelectedItem().toString().equals("Jammu and Kashmir")){
+                        price.setText("Rs. "+1200);
+                    }else if(dest.getSelectedItem().toString().equals("Ladakh")){
+                        price.setText("Rs. "+1760);
+                    }else if(dest.getSelectedItem().toString().equals("Punjab")){
+                        price.setText("Rs. "+945);
+                    }else if(dest.getSelectedItem().toString().equals("Himachal Pradesh")){
+                        price.setText("Rs. "+705);
+                    }else if(dest.getSelectedItem().toString().equals("Uttar Pradesh")){
+                        price.setText("Rs. "+699);
+                    }else if(dest.getSelectedItem().toString().equals("Rajasthan")){
+                        price.setText("Rs. "+900);
+                    }else if(dest.getSelectedItem().toString().equals("Uttarakhand")){
+                        price.setText("Rs. "+1310);
+                    }
+                }else {
+                    if(dest.getSelectedItem().toString().equals("Haryana")){
+                        price.setText("Rs. "+50);
+                    }else if(dest.getSelectedItem().toString().equals("Jammu and Kashmir")){
+                        price.setText("Rs. "+660);
+                    }else if(dest.getSelectedItem().toString().equals("Ladakh")){
+                        price.setText("Rs. "+1365);
+                    }else if(dest.getSelectedItem().toString().equals("Punjab")){
+                        price.setText("Rs. "+676);
+                    }else if(dest.getSelectedItem().toString().equals("Himachal Pradesh")){
+                        price.setText("Rs. "+526);
+                    }else if(dest.getSelectedItem().toString().equals("Uttar Pradesh")){
+                        price.setText("Rs. "+18);
+                    }else if(dest.getSelectedItem().toString().equals("Rajasthan")){
+                        price.setText("Rs. "+290);
+                    }else if(dest.getSelectedItem().toString().equals("Uttarakhand")){
+                        price.setText("Rs. "+300);
+                    }
+                }
             }
         });
         price.setCursorVisible(false);
