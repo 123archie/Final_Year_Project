@@ -38,52 +38,12 @@ public class HomeFragment extends Fragment {
         Button btnsubmit;
         Drawable img=getContext().getDrawable(R.mipmap.warning);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        name = binding.editName.findViewById(R.id.name);
-        editName=binding.editName.findViewById(R.id.edit_name);
-        spin = binding.spinner.findViewById(R.id.spinner);
         start = binding.editStart.findViewById(R.id.edit_start);
         dest = binding.destAdd.findViewById(R.id.destAdd);
         price = binding.editPrice.findViewById(R.id.edit_price);
         btnsubmit = binding.btn.findViewById(R.id.btn);
         spin2=binding.spinner2.findViewById(R.id.spinner2);
-        editName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence editName, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence editName, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editName) {
-                try{
-                if(Character.isDigit(editName.toString().charAt(editName.length()-1))){
-                    Toast.makeText(getContext(), "Name Should not contain digit.", Toast.LENGTH_SHORT).show();
-                    editName.setFilters(new InputFilter[] {
-                            new InputFilter.LengthFilter(editName.length())
-                    });
-                }
-                else{
-                    editName.setFilters(new InputFilter[] {});
-                }}catch(Exception e){
-
-                }
-            }
-        });
-
         ArrayList<String> spinnerList = new ArrayList<>();
-        spinnerList.add("Select Gender");
-        spinnerList.add("Male");
-        spinnerList.add("Female");
-        spinnerList.add("Others");
-        spinnerList.add("Prefer not to say");
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile, spinnerList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spin.setSelection(0);
-        spin.setAdapter(spinnerAdapter);
         start.setFocusable(false);
         //Select Destination
         spinnerList = new ArrayList<>();
@@ -96,7 +56,7 @@ public class HomeFragment extends Fragment {
         spinnerList.add("Uttar Pradesh");
         spinnerList.add("Rajasthan");
         spinnerList.add("Utarakhand");
-        spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile2, spinnerList);
+        ArrayAdapter spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile2, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dest.setAdapter(spinnerAdapter);
         dest.setSelection(0);
@@ -199,12 +159,14 @@ public class HomeFragment extends Fragment {
         btnsubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                if(editName.getText().length()==0){
-//                    name.setCompoundDrawables(null, null, img, null);
+                if(dest.getSelectedItemPosition()==0){
+                    Toast.makeText(getContext(), "Please select your destination", Toast.LENGTH_SHORT).show();
+                }else if(spin2.getSelectedItemPosition()==0){
+                    Toast.makeText(getContext(), "Please select bus type", Toast.LENGTH_SHORT).show();
+                }else{
+
                 }
-             else{
-                Toast.makeText(getContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
-             }
+
             }
         });
         View root = binding.getRoot();
