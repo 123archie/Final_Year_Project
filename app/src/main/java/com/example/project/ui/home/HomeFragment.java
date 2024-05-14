@@ -20,21 +20,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.MenuPopupWindow;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.project.ApiService;
+import com.example.project.Model;
 import com.example.project.R;
+import com.example.project.RetrofitClient;
 import com.example.project.databinding.FragmentHomeBinding;
 import java.util.ArrayList;
-import okhttp3.Response;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     public EditText start;
+    Spinner spin2, dest;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         EditText name, price, editName;
-        Spinner spin, spin2, dest;
         Button btnsubmit;
         Drawable img=getContext().getDrawable(R.mipmap.warning);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -164,7 +171,7 @@ public class HomeFragment extends Fragment {
                 }else if(spin2.getSelectedItemPosition()==0){
                     Toast.makeText(getContext(), "Please select bus type", Toast.LENGTH_SHORT).show();
                 }else{
-
+                    sendDataToDatabase();
                 }
 
             }
@@ -172,6 +179,25 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         return root;
 
+    }
+    private void sendDataToDatabase(){
+        String destName=dest.getSelectedItem().toString();
+        Model model=new Model(destName);
+        ApiService apiService= RetrofitClient.getConnection().create(ApiService.class);
+//        Call<Model> call=apiService.createTask(model);
+//        call.enqueue(new Callback<Model>() {
+//            @Override
+//            public void onResponse(Call<Model> call, Response<Model> response) {
+//                if(response.isSuccessful()){
+//                    Toast.makeText(getContext(), "Task Created Successfully", Toast.LENGTH_SHORT);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Model> call, Throwable t) {
+//                Toast.makeText(getContext(), "Task Creation Failed", Toast.LENGTH_SHORT);
+//            }
+//        });
     }
     @Override
         public void onDestroyView() {
