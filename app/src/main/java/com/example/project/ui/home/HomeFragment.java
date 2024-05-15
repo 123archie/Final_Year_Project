@@ -36,12 +36,13 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     public EditText start;
+    EditText price;
     Spinner spin2, dest;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
-        EditText name, price, editName;
+        EditText name, editName;
         Button btnsubmit;
         Drawable img=getContext().getDrawable(R.mipmap.warning);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -182,22 +183,31 @@ public class HomeFragment extends Fragment {
     }
     private void sendDataToDatabase(){
         String destName=dest.getSelectedItem().toString();
-        Model model=new Model(destName);
+        int fare=Integer.valueOf(price.getText().toString().substring(4));
+        Log.d("Dest+Fare", "Dest+Fare: "+destName+", "+fare);
+        Model model=new Model(destName, fare);
+        Log.d("ModelName", "ModelName: "+model);
         ApiService apiService= RetrofitClient.getConnection().create(ApiService.class);
-//        Call<Model> call=apiService.createTask(model);
-//        call.enqueue(new Callback<Model>() {
-//            @Override
-//            public void onResponse(Call<Model> call, Response<Model> response) {
-//                if(response.isSuccessful()){
-//                    Toast.makeText(getContext(), "Task Created Successfully", Toast.LENGTH_SHORT);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Model> call, Throwable t) {
-//                Toast.makeText(getContext(), "Task Creation Failed", Toast.LENGTH_SHORT);
-//            }
-//        });
+        try{
+            Call<Model> call = apiService.createTask(model);
+            call.enqueue(new Callback<Model>() {
+            @Override
+            public void onResponse(Call<Model> call, Response<Model> response) {
+                Log.d("ResponseCode", "ResponseCode: "+response.code());
+                if(response.isSuccessful()){
+                    Toast.makeText(getContext(), "Task Created Successfully", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(), "Task Creation Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Model> call, Throwable t) {
+                Toast.makeText(getContext(), "No Task Creation.", Toast.LENGTH_SHORT).show();
+            }
+        });}catch(Exception e){
+            Log.d("ApiService", "ApiService: "+e.getLocalizedMessage());
+        }
     }
     @Override
         public void onDestroyView() {
