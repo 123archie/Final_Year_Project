@@ -190,8 +190,9 @@ public class HomeFragment extends Fragment {
         ApiService apiService= RetrofitClient.getConnection().create(ApiService.class);
         try{
             Call<Model> call = apiService.createTask(model);
+            Log.d("Call_Model", "Call_Model: "+call.toString());
             call.enqueue(new Callback<Model>() {
-            @Override
+                @Override
             public void onResponse(Call<Model> call, Response<Model> response) {
                 Log.d("ResponseCode", "ResponseCode: "+response.code());
                 if(response.isSuccessful()){
