@@ -27,6 +27,7 @@ import com.example.project.R;
 import com.example.project.RetrofitClient;
 import com.example.project.databinding.FragmentHomeBinding;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -201,13 +202,22 @@ public class HomeFragment extends Fragment {
                 Log.d("ResponseCode", "ResponseCode: "+response.code());
                 if(response.isSuccessful()){
                     Toast.makeText(getContext(), "Task Created Successfully", Toast.LENGTH_SHORT).show();
-                    String URL="https://fingerprint-quxo.vercel.app/passengerreg/destination";
-                    HashMap<String, String> hm=new HashMap<>();
-//                    HashMap<String, Integer> hs=new HashMap<>();
-                    hm.put("destination", destName);
-//                    hs.put("amt_paid", fare);
-                    Log.d("Destination Name", "Destination Name: "+hm.get("destination"));
-//                    Log.d("Destination Name", "Fare: "+hm.get("fare"));
+                    try {
+                        URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/?fingerprint&destination&amt_paid&fare");
+                        String queryString=url.getQuery();
+                        String[] keyValue=queryString.split("&");
+                        for (String keyValuePair : keyValue) {
+                            String key = keyValuePair.split("=")[0];
+                            Log.d("Destination", "key: "+key);
+                        }
+                        HashMap<String,  String>hm=new HashMap<>();
+                        hm.put("destination", destName);
+                        HashMap<String, Integer> hs=new HashMap<>();
+                        hs.put("fare", fare);
+                    }catch(MalformedURLException e){
+
+                    }
+
                 }else{
                     Toast.makeText(getContext(), "Task Creation Failed", Toast.LENGTH_SHORT).show();
                 }
