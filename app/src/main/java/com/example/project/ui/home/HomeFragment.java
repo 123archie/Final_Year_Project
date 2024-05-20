@@ -26,7 +26,10 @@ import com.example.project.Model;
 import com.example.project.R;
 import com.example.project.RetrofitClient;
 import com.example.project.databinding.FragmentHomeBinding;
+
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +43,7 @@ public class HomeFragment extends Fragment {
     Spinner spin2, dest;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         EditText name, editName;
@@ -63,7 +67,7 @@ public class HomeFragment extends Fragment {
         spinnerList.add("Himachal Pradesh");
         spinnerList.add("Uttar Pradesh");
         spinnerList.add("Rajasthan");
-        spinnerList.add("Utarakhand");
+        spinnerList.add("Uttarakhand");
         ArrayAdapter spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinnerfile2, spinnerList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dest.setAdapter(spinnerAdapter);
@@ -197,6 +201,13 @@ public class HomeFragment extends Fragment {
                 Log.d("ResponseCode", "ResponseCode: "+response.code());
                 if(response.isSuccessful()){
                     Toast.makeText(getContext(), "Task Created Successfully", Toast.LENGTH_SHORT).show();
+                    String URL="https://fingerprint-quxo.vercel.app/passengerreg/destination";
+                    HashMap<String, String> hm=new HashMap<>();
+//                    HashMap<String, Integer> hs=new HashMap<>();
+                    hm.put("destination", destName);
+//                    hs.put("amt_paid", fare);
+                    Log.d("Destination Name", "Destination Name: "+hm.get("destination"));
+//                    Log.d("Destination Name", "Fare: "+hm.get("fare"));
                 }else{
                     Toast.makeText(getContext(), "Task Creation Failed", Toast.LENGTH_SHORT).show();
                 }

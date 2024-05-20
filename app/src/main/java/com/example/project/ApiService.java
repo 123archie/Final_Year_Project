@@ -5,7 +5,7 @@ import retrofit2.http.Body;
 import retrofit2.http.PUT;
 
 public interface ApiService {
-    @PUT("passengerreg/")
+    @PUT("/passengerreg/")
     Call<Model> createTask(@Body Model task);
 
 }
