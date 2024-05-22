@@ -27,6 +27,8 @@ import com.example.project.R;
 import com.example.project.RetrofitClient;
 import com.example.project.databinding.FragmentHomeBinding;
 
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -203,18 +205,26 @@ public class HomeFragment extends Fragment {
                 if(response.isSuccessful()){
                     Toast.makeText(getContext(), "Task Created Successfully", Toast.LENGTH_SHORT).show();
                     try {
-                        URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/?fingerprint&destination&amt_paid&fare");
-                        String queryString=url.getQuery();
-                        String[] keyValue=queryString.split("&");
-                        for (String keyValuePair : keyValue) {
-                            String key = keyValuePair.split("=")[0];
-                            Log.d("Destination", "key: "+key);
-                        }
+//                        URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/?fingerprint&destination&amt_paid&fare");
+                        URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/");
+                        HttpURLConnection connection=(HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("PUT");
+                        connection.setRequestProperty("Content-Type", "application/json");
+//                        String queryString=url.getQuery();
+//                        String[] keyValue=queryString.split("&");
+//                        for (String keyValuePair : keyValue) {
+//                            String key = keyValuePair.split("=")[0];
+//                            Log.d("Destination", "key: "+key);
+//                        }
                         HashMap<String,  String>hm=new HashMap<>();
                         hm.put("destination", destName);
                         HashMap<String, Integer> hs=new HashMap<>();
                         hs.put("fare", fare);
-                    }catch(MalformedURLException e){
+                        PrintWriter printWriter=new PrintWriter(connection.getOutputStream());
+                        printWriter.println(hm);
+                        printWriter.println(hs);
+                        Log.d("printwriter", "printwriter: "+printWriter.toString());
+                    }catch(Exception e){
 
                     }
 
