@@ -126,47 +126,69 @@ public class HomeFragment extends Fragment {
                     }
                 }
             }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+//
+//
+            }
+        });
+        dest.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(dest.getSelectedItem().toString().equals("Haryana")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 50);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+65);
+                    }
+                }else if(dest.getSelectedItem().toString().equals("Jammu and Kashmir")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 660);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+1200);
+                    }
+                }else if(dest.getSelectedItem().toString().equals("Ladakh")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 1365);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+1760);
+                    }
+                }else if(dest.getSelectedItem().toString().equals("Punjab")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 676);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+945);
+                    }
+                }else if(dest.getSelectedItem().toString().equals("Himachal Pradesh")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 526);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+705);
+                    }
+                }else if(dest.getSelectedItem().toString().equals("Uttar Pradesh")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 18);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+699);
+                    }
+                }else if(dest.getSelectedItem().toString().equals("Rajasthan")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 290);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+900);
+                    }
+                }else if(dest.getSelectedItem().toString().equals("Uttarakhand")){
+                    if(spin2.getSelectedItem().equals("Standard")) {
+                        price.setText("Rs. " + 300);
+                    }else if(spin2.getSelectedItem().equals("AC")){
+                        price.setText("Rs. "+1310);
+                    }
+                }
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-                if(spin2.getItemAtPosition(0).equals("AC")) {
-                    if(dest.getSelectedItem().toString().equals("Haryana")){
-                        price.setText("Rs. "+65);
-                    }else if(dest.getSelectedItem().toString().equals("Jammu and Kashmir")){
-                        price.setText("Rs. "+1200);
-                    }else if(dest.getSelectedItem().toString().equals("Ladakh")){
-                        price.setText("Rs. "+1760);
-                    }else if(dest.getSelectedItem().toString().equals("Punjab")){
-                        price.setText("Rs. "+945);
-                    }else if(dest.getSelectedItem().toString().equals("Himachal Pradesh")){
-                        price.setText("Rs. "+705);
-                    }else if(dest.getSelectedItem().toString().equals("Uttar Pradesh")){
-                        price.setText("Rs. "+699);
-                    }else if(dest.getSelectedItem().toString().equals("Rajasthan")){
-                        price.setText("Rs. "+900);
-                    }else if(dest.getSelectedItem().toString().equals("Uttarakhand")){
-                        price.setText("Rs. "+1310);
-                    }
-                }else {
-                    if(dest.getSelectedItem().toString().equals("Haryana")){
-                        price.setText("Rs. "+50);
-                    }else if(dest.getSelectedItem().toString().equals("Jammu and Kashmir")){
-                        price.setText("Rs. "+660);
-                    }else if(dest.getSelectedItem().toString().equals("Ladakh")){
-                        price.setText("Rs. "+1365);
-                    }else if(dest.getSelectedItem().toString().equals("Punjab")){
-                        price.setText("Rs. "+676);
-                    }else if(dest.getSelectedItem().toString().equals("Himachal Pradesh")){
-                        price.setText("Rs. "+526);
-                    }else if(dest.getSelectedItem().toString().equals("Uttar Pradesh")){
-                        price.setText("Rs. "+18);
-                    }else if(dest.getSelectedItem().toString().equals("Rajasthan")){
-                        price.setText("Rs. "+290);
-                    }else if(dest.getSelectedItem().toString().equals("Uttarakhand")){
-                        price.setText("Rs. "+300);
-                    }
-                }
             }
         });
         price.setCursorVisible(false);
@@ -218,11 +240,14 @@ public class HomeFragment extends Fragment {
 //                        }
                         HashMap<String,  String>hm=new HashMap<>();
                         hm.put("destination", destName);
+                        Log.d("DestinationName", "DestinationName: "+hm.get("destination"));
                         HashMap<String, Integer> hs=new HashMap<>();
                         hs.put("fare", fare);
+                        Log.d("DestinationName", "DestinationName: "+hs.get("fare"));
                         PrintWriter printWriter=new PrintWriter(connection.getOutputStream());
                         printWriter.println(hm);
                         printWriter.println(hs);
+                        Model model=new Model(hm.get("destination"), hs.get("fare"));
                         Log.d("printwriter", "printwriter: "+printWriter.toString());
                     }catch(Exception e){
 
