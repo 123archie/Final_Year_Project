@@ -2,9 +2,7 @@ package com.example.project.ui.home;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -230,7 +228,7 @@ public class HomeFragment extends Fragment {
 //                        URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/?fingerprint&destination&amt_paid&fare");
                         URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/");
                         HttpURLConnection connection=(HttpURLConnection) url.openConnection();
-                        connection.setRequestMethod("PUT");
+                        connection.setRequestMethod("POST");
                         connection.setRequestProperty("Content-Type", "application/json");
 //                        String queryString=url.getQuery();
 //                        String[] keyValue=queryString.split("&");
@@ -240,15 +238,15 @@ public class HomeFragment extends Fragment {
 //                        }
                         HashMap<String,  String>hm=new HashMap<>();
                         hm.put("destination", destName);
-                        Log.d("DestinationName", "DestinationName: "+hm.get("destination"));
+//                        Log.d("DestinationName", "DestinationName: "+hm.get("destination"));
                         HashMap<String, Integer> hs=new HashMap<>();
                         hs.put("fare", fare);
-                        Log.d("DestinationName", "DestinationName: "+hs.get("fare"));
+//                        Log.d("DestinationName", "Fare: "+hs.get("fare"));
                         PrintWriter printWriter=new PrintWriter(connection.getOutputStream());
                         printWriter.println(hm);
                         printWriter.println(hs);
                         Model model=new Model(hm.get("destination"), hs.get("fare"));
-                        Log.d("printwriter", "printwriter: "+printWriter.toString());
+//                        Log.d("printwriter", "printwriter: "+model);
                     }catch(Exception e){
 
                     }
