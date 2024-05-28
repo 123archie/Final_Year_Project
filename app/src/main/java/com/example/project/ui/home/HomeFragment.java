@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.project.ApiService;
 import com.example.project.Model;
 import com.example.project.R;
+import com.example.project.ResponseModel;
 import com.example.project.RetrofitClient;
 import com.example.project.databinding.FragmentHomeBinding;
 
@@ -209,60 +210,38 @@ public class HomeFragment extends Fragment {
 
     }
     private void sendDataToDatabase(){
-        String destName=dest.getSelectedItem().toString();
+        String destination=dest.getSelectedItem().toString();
         int fare=Integer.valueOf(price.getText().toString().substring(4));
-        Log.d("Dest+Fare", "Dest+Fare: "+destName+", "+fare);
-        Model model=new Model(destName, fare);
-        Log.d("ModelName", "ModelName: "+model);
+        Log.d("Dest+Fare", "Dest+Fare: "+destination+", "+fare);
         ApiService apiService= RetrofitClient.getConnection().create(ApiService.class);
-        try{
-            Call<Model> call = apiService.createTask(model);
+        Model model=new Model(destination, fare);
+        Log.d("ModelName", "ModelName: "+model);
+//        try{
+            Call<ResponseModel> call = apiService.createTask(model);
             Log.d("Call_Model", "Call_Model: "+call.toString());
-            call.enqueue(new Callback<Model>() {
+            call.enqueue(new Callback<ResponseModel>() {
                 @Override
-            public void onResponse(Call<Model> call, Response<Model> response) {
-                Log.d("ResponseCode", "ResponseCode: "+response.code());
+            public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
+
                 if(response.isSuccessful()){
-                    Toast.makeText(getContext(), "Task Created Successfully", Toast.LENGTH_SHORT).show();
-                    try {
-//                        URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/?fingerprint&destination&amt_paid&fare");
-                        URL url=new URL("https://fingerprint-quxo.vercel.app/passengerreg/");
-                        HttpURLConnection connection=(HttpURLConnection) url.openConnection();
-                        connection.setRequestMethod("POST");
-                        connection.setRequestProperty("Content-Type", "application/json");
-//                        String queryString=url.getQuery();
-//                        String[] keyValue=queryString.split("&");
-//                        for (String keyValuePair : keyValue) {
-//                            String key = keyValuePair.split("=")[0];
-//                            Log.d("Destination", "key: "+key);
-//                        }
-                        HashMap<String,  String>hm=new HashMap<>();
-                        hm.put("destination", destName);
-//                        Log.d("DestinationName", "DestinationName: "+hm.get("destination"));
-                        HashMap<String, Integer> hs=new HashMap<>();
-                        hs.put("fare", fare);
-//                        Log.d("DestinationName", "Fare: "+hs.get("fare"));
-                        PrintWriter printWriter=new PrintWriter(connection.getOutputStream());
-                        printWriter.println(hm);
-                        printWriter.println(hs);
-                        Model model=new Model(hm.get("destination"), hs.get("fare"));
-//                        Log.d("printwriter", "printwriter: "+model);
-                    }catch(Exception e){
-
-                    }
-
+                    ResponseModel responseModel=response.body();
+                    Log.d("ResponseCode", "ResponseCode: "+response.code());
+//                    Log.d("ResponseBody", "ResponseBody: "+response.message());
+                    Toast.makeText(getContext(), "Task created Successfully", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getContext(), "Task Creation Failed", Toast.LENGTH_SHORT).show();
                 }
             }
 
-            @Override
-            public void onFailure(Call<Model> call, Throwable t) {
-                Toast.makeText(getContext(), "No Task Creation.", Toast.LENGTH_SHORT).show();
-            }
-        });}catch(Exception e){
-            Log.d("ApiService", "ApiService: "+e.getLocalizedMessage());
-        }
+                @Override
+                public void onFailure(Call<ResponseModel> call, Throwable t) {
+
+                }
+
+        });
+//    }catch(Exception e){
+//            Log.d("ApiService", "ApiService: "+e.getLocalizedMessage());
+//        }
     }
     @Override
         public void onDestroyView() {
